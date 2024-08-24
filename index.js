@@ -26,9 +26,21 @@ app.post("/comment", (req, res) => {
 
   connection.query(sqlQuery, (error, results) => {
     if (error) return console.log(error);
-    console.log(results);
 
-    res.status(200).json({ nickname, password, text, reqIp });
+    const id = results.insertId;
+
+    res.status(200).json({ id, nickname, password, text, reqIp });
+  });
+});
+
+app.delete("/comment/:id", (req, res) => {
+  const id = req.params.id;
+  const sqlQuery = `DELETE FROM comments WHERE id=${id}`;
+
+  connection.query(sqlQuery, (error, results) => {
+    if (error) return console.log(error);
+
+    res.status(200).send("success");
   });
 });
 
