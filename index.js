@@ -35,12 +35,17 @@ app.post("/comment", (req, res) => {
 
 app.delete("/comment/:id", (req, res) => {
   const id = req.params.id;
-  const sqlQuery = `DELETE FROM comments WHERE id=${id}`;
+  const { password } = req.body;
+
+  const sqlQuery = `DELETE FROM comments WHERE id=${id} AND password='${password}'`;
 
   connection.query(sqlQuery, (error, results) => {
     if (error) return console.log(error);
-
-    res.status(200).send("success");
+    if (results.affectedRows) {
+      res.status(200).send("success");
+    } else {
+      res.status(400).send("fail");
+    }
   });
 });
 
